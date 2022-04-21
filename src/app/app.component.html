@@ -1,0 +1,15 @@
+<form [formGroup]="myForm">
+  <div>
+    <input formControlName="theCheckBox" type="checkbox" (change)="revalidate()"/>
+    <!-- <div>
+      <input formControlName="theCheckBox" [value]="true" type="radio"/>true
+    </div>
+    <div>
+      <input formControlName="theCheckBox" [value]="false" type="radio"/>false
+    </div> -->
+    <div>
+      <input  formControlName="theInputNumber" type="number" />
+    </div>
+  </div>
+  <label>Form Validity: {{this.myForm.valid}}</label>
+</form>
