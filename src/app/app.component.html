@@ -1,6 +1,6 @@
 <form [formGroup]="myForm">
   <div>
-    <input formControlName="theCheckBox" type="checkbox" (change)="revalidate()"/>
+    <input formControlName="theCheckBox" type="checkbox"/>
     <!-- <div>
       <input formControlName="theCheckBox" [value]="true" type="radio"/>true
     </div>
@@ -8,7 +8,7 @@
       <input formControlName="theCheckBox" [value]="false" type="radio"/>false
     </div> -->
     <div>
-      <input  formControlName="theInputNumber" type="number" />
+      <input *ngIf="theCheckValue"  formControlName="theInputNumber" type="number" />
     </div>
   </div>
   <label>Form Validity: {{this.myForm.valid}}</label>

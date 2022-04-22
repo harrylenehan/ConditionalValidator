@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
 @Component({
@@ -6,7 +6,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'ConditionalValidator';
 
   // Changing the checkbox does not trigger form validation
@@ -16,17 +16,31 @@ export class AppComponent {
 
   // do the other conditional validators in the same form in P2 work? probably shouldn't
 
+  // Possible Solution - just add validation without ConditionalValidator, and have the FormControl disabled. When box is checked, enable that FormControl.
+  //                      When the FormControl is disabled its validation will not run.
+
   myForm: FormGroup = this.fb.group({
-    theCheckBox: [false, [Validators.requiredTrue]],
-    theInputNumber: [0, [this.ConditionalValidator(() => this.theCheckValue, [Validators.required, Validators.min(1)])]]
+    theCheckBox: [false],
+    // theInputNumber: [0, [this.ConditionalValidator(() => this.theCheckValue, [Validators.required, Validators.min(1)])]]
+    theInputNumber: [{value: 0, disabled: true}, [Validators.required, Validators.min(1)]]
   });
 
-  get theCheckValue() {return this.myForm.get('theCheckBox')?.value;};
+  get theCheckBox() {return this.myForm.get('theCheckBox');};
+  get theInputNumber() {return this.myForm.get('theInputNumber');};
+  get theCheckValue() {return this.theCheckBox?.value};
 
   constructor(private fb: FormBuilder){}
 
   revalidate(){
-    this.myForm.updateValueAndValidity();
+    this.myForm.get("theInputNumber")?.updateValueAndValidity();
+  }
+
+  ngOnInit(): void {
+
+    this.theCheckBox?.valueChanges.subscribe(checked => {
+      checked ? this.theInputNumber?.enable() : this.theInputNumber?.disable();
+    });
+  
   }
 
   ConditionalValidator(predicate: Function, validator: any) {
